@@ -1,0 +1,42 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: blaz.spec.js >> findflight
+- Location: tests\blaz.spec.js:13:5
+
+# Error details
+
+```
+Error: locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for locator('tr').filter({ hasText: '43' }).locator('input[type="submit"]')
+
+```
+
+# Test source
+
+```ts
+  1  | exports.chooseflight = class chooseflight
+  2  | {
+  3  | constructor(page)
+  4  | {
+  5  |     this.page=page;
+  6  |     this.flight = page
+  7  |             .locator('tr')
+  8  |             .filter({ hasText: '43' })
+  9  |             .locator('input[type="submit"]');
+  10 | }    
+  11 |     async flightchoose()
+  12 |     {
+> 13 |         await this.flight.click();
+     |                           ^ Error: locator.click: Target page, context or browser has been closed
+  14 |                
+  15 |     }
+  16 |    
+  17 | };
+```

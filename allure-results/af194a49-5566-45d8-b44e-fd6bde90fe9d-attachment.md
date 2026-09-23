@@ -1,0 +1,139 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: blaz.spec.js >> purchase_ticket
+- Location: tests\blaz.spec.js:30:5
+
+# Error details
+
+```
+TypeError: (0 , _test.expect)(...).getByPlaceHolder is not a function
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=f2e1]:
+  - generic [ref=f2e4]:
+    - link "Travel The World" [ref=f2e5] [cursor=pointer]:
+      - /url: index.php
+    - link "home" [ref=f2e6] [cursor=pointer]:
+      - /url: home
+  - generic [ref=f2e7]:
+    - heading "Your flight from TLV to SFO has been reserved." [level=2] [ref=f2e8]
+    - paragraph [ref=f2e9]: "Airline: United"
+    - paragraph [ref=f2e10]: "Flight Number: UA954"
+    - paragraph [ref=f2e11]: "Price: 400"
+    - paragraph [ref=f2e12]: "Arbitrary Fees and Taxes: 514.76"
+    - separator [ref=f2e13]
+    - paragraph [ref=f2e14]:
+      - text: "Total Cost:"
+      - emphasis [ref=f2e15]: "914.76"
+    - paragraph [ref=f2e16]: Please submit the form below to purchase the flight.
+    - generic [ref=f2e17]:
+      - generic [ref=f2e18]:
+        - generic [ref=f2e19] [cursor=pointer]: Name
+        - textbox "Name" [active] [ref=f2e21]:
+          - /placeholder: First Last
+          - text: kunal
+      - generic [ref=f2e22]:
+        - generic [ref=f2e23] [cursor=pointer]: Address
+        - textbox "Address" [ref=f2e25]:
+          - /placeholder: 123 Main St.
+      - generic [ref=f2e26]:
+        - generic [ref=f2e27] [cursor=pointer]: City
+        - textbox "City" [ref=f2e29]:
+          - /placeholder: Anytown
+      - generic [ref=f2e30]:
+        - generic [ref=f2e31] [cursor=pointer]: State
+        - textbox "State" [ref=f2e33]
+      - generic [ref=f2e34]:
+        - generic [ref=f2e35] [cursor=pointer]: Zip Code
+        - textbox "Zip Code" [ref=f2e37]:
+          - /placeholder: "12345"
+      - generic [ref=f2e38]:
+        - generic [ref=f2e39] [cursor=pointer]: Card Type
+        - combobox [ref=f2e41] [cursor=pointer]:
+          - option "Visa" [selected]
+          - option "American Express"
+          - option "Diner's Club"
+      - generic [ref=f2e42]:
+        - generic [ref=f2e43] [cursor=pointer]: Credit Card Number
+        - textbox "Credit Card Number" [ref=f2e45]
+      - generic [ref=f2e46]:
+        - generic [ref=f2e47] [cursor=pointer]: Month
+        - textbox "Month" [ref=f2e49]: "11"
+      - generic [ref=f2e50]:
+        - generic [ref=f2e51] [cursor=pointer]: Year
+        - textbox "Year" [ref=f2e53]: "2017"
+      - generic [ref=f2e54]:
+        - generic [ref=f2e55] [cursor=pointer]: Name on Card
+        - textbox "Name on Card" [ref=f2e57]:
+          - /placeholder: John Smith
+      - generic [ref=f2e59]:
+        - generic [ref=f2e60] [cursor=pointer]:
+          - checkbox "Remember me" [ref=f2e61]
+          - text: Remember me
+        - button "Purchase Flight" [ref=f2e62] [cursor=pointer]
+```
+
+# Test source
+
+```ts
+  1  | import {test, expect} from '@playwright/test';
+  2  | import {blazdemo} from '../tests/pom.js';
+  3  | import {chooseflight} from '../tests/flight.js'
+  4  | import { purchase } from './purchase.js';
+  5  | 
+  6  | test('blzdemotesting', async({page})=>{
+  7  | 
+  8  |     const bz =new blazdemo(page);
+  9  |     await page.goto('https://blazedemo.com/');
+  10 |     await bz.searchflight('Paris','London');
+  11 |     await page.waitForTimeout(3000);
+  12 | })
+  13 | 
+  14 | 
+  15 | test('findflight', async({page})=>
+  16 | {
+  17 |     const bz =new blazdemo(page);
+  18 |     const cflight = new chooseflight(page);
+  19 | 
+  20 |     await page.goto('https://blazedemo.com/');
+  21 |     await bz.searchflight('Paris','London');
+  22 |     await page.waitForTimeout(3000);
+  23 | 
+  24 |     await cflight.flightchoose();
+  25 |     await page.waitForTimeout(3000);
+  26 | 
+  27 | 
+  28 | })
+  29 | 
+  30 | test('purchase_ticket', async({page})=>
+  31 | {
+  32 |     const bz =new blazdemo(page);
+  33 |     const cflight = new chooseflight(page);
+  34 |     const pur = new purchase(page);
+  35 | 
+  36 |     await page.goto('https://blazedemo.com/');
+  37 |     await bz.searchflight('Paris','London');
+  38 |     await page.waitForTimeout(3000);
+  39 | 
+  40 |     await cflight.flightchoose();
+  41 |     await page.waitForTimeout(3000);
+  42 | 
+  43 |     await pur.purchaseticket();
+> 44 |     await expect(page).getByPlaceHolder('First Last').tobeVisible();
+     |                        ^ TypeError: (0 , _test.expect)(...).getByPlaceHolder is not a function
+  45 |     await expect(page).getByPlaceHolder('First Last').tobeEditable();
+  46 |     await expect(page).getByPlaceHolder('First Last').tobeEnabled();
+  47 |     await page.waitForTimeout(3000);
+  48 | 
+  49 | 
+  50 | })
+```
