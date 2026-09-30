@@ -4,5 +4,5 @@ test('screenshot',async ({page})=>
 {
     await page.goto('https://demo.automationtesting.in/Register.html');
    await page.screenshot({path:'./screenshot/2.png',fullPage:true});
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(6000);
 });
